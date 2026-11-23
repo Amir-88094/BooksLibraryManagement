@@ -33,6 +33,9 @@ export const LatestReview: React.FC<LatestReviewProps> = ({ reviews, bookId }) =
                  ) : (
                      <div className="m-3">
                         <p className="lead">Currently there are no reviews for this book</p>
+                        <Link type="button" to={`/reviewList/${bookId}`} className = "btn main-color btn-md text-white mt-2">
+                        Be the first to leave a review
+                        </Link>
                     </div>
                  ) }
             </div>

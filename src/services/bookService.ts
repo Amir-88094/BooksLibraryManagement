@@ -1,5 +1,6 @@
 import type { BookModel } from "../layouts/models/BookModel";
 import type { ReviewModel } from "../layouts/models/ReviewModel";
+import { fetchWithAuth } from "./fetchWithAuth";
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 interface BookResponse {
     content: BookModel[];
@@ -15,6 +16,11 @@ interface ReviewResponse {
         totalElements: number;
         totalPages: number;
     }
+}
+interface ReviewRequest {
+    rating: number;
+    bookId: number;
+    reviewDescription?: string;
 }
 export const bookService = {
     // All the services regarding the books
@@ -63,5 +69,33 @@ export const bookService = {
             throw new Error("Failed to fetch reviews for this book");
         }
         return await response.json();
+    },
+    async createReview(reviewRequest: ReviewRequest): Promise<ReviewModel> {
+     const response = await fetchWithAuth(`${BASE_URL}/api/reviews`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(reviewRequest),
+        
+     }
+     )
+     if(!response.ok){
+        throw new Error("Failed to create review");
+     }
+     return await response.json();
+    },
+
+
+    async getBookAverageRating(bookId: string):Promise<number>{
+
+        const response = await fetch(`${BASE_URL}/api/reviews/book/${bookId}/average-rating`);
+
+       if(!response.ok){
+        throw new Error("Error in fetching Averag Rating")
+       }
+       return await response.json();
+
     }
+
 }
