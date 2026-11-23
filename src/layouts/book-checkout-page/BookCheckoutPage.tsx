@@ -5,6 +5,7 @@ import { bookService } from "../../services/bookService";
 import { CheckoutBox } from "./components/CheckoutBox";
 import type { ReviewModel } from "../models/ReviewModel";
 import { LatestReview } from "./components/LatestReview";
+import { StarsReview } from "../../components/StarsReview";
 
 export const BookCheckoutPage = () => {
  const [book, setBook] = useState<BookModel | null>(null);
@@ -12,6 +13,8 @@ export const BookCheckoutPage = () => {
  const [httpError, setHttpError] = useState<string | null>(null);
 //  reviews 
 const [reviews, setReviews] = useState<ReviewModel[]>([]);
+// average-rating
+const [rating, setRating] = useState<number>(0.0);
 
   const bookId = window.location.pathname.split("/").pop();
   useEffect(() => {
@@ -19,9 +22,10 @@ const [reviews, setReviews] = useState<ReviewModel[]>([]);
       setIsLoading(true);
       try{
         if(bookId){
-          const [bookData, reviewsData] = await Promise.all([
+          const [bookData, reviewsData,rating] = await Promise.all([
             bookService.getBookById(bookId),
-            bookService.getReviewsByBookId(bookId,0, 5)
+            bookService.getReviewsByBookId(bookId,0, 5),
+            bookService.getBookAverageRating(bookId)
           ])
     
           if(!bookData){
@@ -30,6 +34,7 @@ const [reviews, setReviews] = useState<ReviewModel[]>([]);
           setBook(bookData);
           setReviews(reviewsData.content);
           setIsLoading(false);
+          setRating(rating);
         }
       }
       catch(error){
@@ -65,6 +70,9 @@ const [reviews, setReviews] = useState<ReviewModel[]>([]);
               alt="Book"
             />
           </div>
+          <div className="mt-2">
+            <StarsReview rating={rating} size={20} />
+          </div>
           <div className="col-4 col-md-4 container">
             <div className="ml-2">
               <h2>{book?.title}</h2>
@@ -86,6 +94,9 @@ const [reviews, setReviews] = useState<ReviewModel[]>([]);
             height="349"
             alt="Book"
           />
+          <div className="mt-2">
+            <StarsReview rating={rating} size={20} />
+          </div>
         </div>
         <div className="mt-4">
           <div className="ml-2">
