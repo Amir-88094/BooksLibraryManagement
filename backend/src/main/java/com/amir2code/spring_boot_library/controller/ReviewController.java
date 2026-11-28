@@ -43,4 +43,12 @@ public class ReviewController {
 
 
     }
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("book/{bookId}/average-rating")
+    public Double getAverageRating(@PathVariable() Long bookId){
+
+        return reviewService.getAverageRating(bookId);
+    }
+
+
 }

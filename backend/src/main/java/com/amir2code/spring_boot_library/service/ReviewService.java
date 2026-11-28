@@ -9,4 +9,6 @@ public interface ReviewService {
 
     Review createReview(String userEmail, ReviewRequest reviewRequest) throws Exception;
 
+    Double getAverageRating(Long bookId);
+
 }

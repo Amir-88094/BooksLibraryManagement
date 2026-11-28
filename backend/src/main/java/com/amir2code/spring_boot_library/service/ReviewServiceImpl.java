@@ -41,4 +41,10 @@ public class ReviewServiceImpl implements ReviewService{
         review.setDate(new java.sql.Date(System.currentTimeMillis()));
         return reviewRepository.save(review);
     }
+    @Override
+    public Double getAverageRating(Long bookId) {
+        Double avg = reviewRepository.findAverageRatingByBookId(bookId);
+        return avg != null ? avg : 0.0;
+    }
+
 }
